@@ -1,0 +1,4 @@
+streamlit
+git+https://github.com/sebastiandres/streamlit_book.git
+matplotlib
+numpy
