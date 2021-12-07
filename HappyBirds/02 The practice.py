@@ -1,48 +1,53 @@
-import pandas as pd
-from matplotlib import pyplot as plt
+import streamlit as st
+import streamlit_book as stb
+import numpy as np
 
-st.title("An interactive lesson")
+from code.trajectory import get_trajectory, fig_from_list
 
-# Define the data
-data = [[1, 50, 100, 5000],
-        [2, 40, 100, 2000], 
-        [3, 30, 100, 5000],
-        [4, 20, 100, 4000],
-        [5, 10, 100, 5000]]
-df = pd.DataFrame(data, columns=['col1', 'col2', 'col3', 'col4'])
+if "trayectory_list" not in st.session_state:
+    st.session_state["trayectory_list"] = []
 
-# Create columns to select the data
-c1, c2, c3, c4 = st.columns(4)
+# Title
+st.title("Trajectory of a projectile")
+st.subheader("Equations of motion of a projectile")
+st.latex("x(t) = v_0 \\cos(\\theta)t")
+st.latex("y(t) = v_0 \\sin(\\theta)t - \\frac{1}{2} g t^{2}")
 
-c1.write("Consider a dummy dataset:")
-c1.write(df)
+# Parameters
+st.subheader("Simulation parameters")
+c1, c2, c3 = st.columns(3)
+dv0 = 1
+v0 = c1.slider("Initial Velocity [meters/second]", 
+                        min_value=dv0, max_value=100*dv0, 
+                        value=10*dv0, step=dv0, help="Initial velocity for the projectile")
+dtheta = 1
+theta_deg = c2.slider("Initial Angle [degrees]", 
+                        min_value=5, max_value=90, 
+                        value=45, step=5, help="Initial velocity for the projectile")
+# options for gravity: earth, moon, mars, jupiter
+gravity_dict = {'Earth': 9.8, 'Moon': 1.6, 'Mars': 3.7, 'Jupiter': 24.8}
+gravity_label = c3.selectbox("Gravity", gravity_dict.keys(), index=0)
+gravity = gravity_dict[gravity_label]
 
-x = c2.selectbox('Select x', df.columns)
-y = c2.selectbox('Select y', df.columns)
+# Compute the plot
+c1, c2 = st.columns([.5, .1])
+if c1.button("Add plot"):
+    theta_rad = theta_deg * np.pi / 180
+    traj_dict = get_trajectory(v0, theta_rad, gravity, gravity_label)
+    st.session_state["trayectory_list"].append(traj_dict)
 
-if x==y:
-    c3.error("x and y cannot be the same")
-else:
-    df_filtered = df[[x, y]]
-    c3.write("Dynamically filtered dataframe:")
-    c3.write(df_filtered)
+if c2.button("Clear plots"):
+    st.session_state["trayectory_list"] = []
 
-    fig = plt.figure()
-    plt.plot(df[x], df[y], 'or-')
-    c4.pyplot(fig)
+if len(st.session_state["trayectory_list"]) > 0:
+    fig = fig_from_list(st.session_state["trayectory_list"])
+    st.pyplot(fig)
 
+# The quizz
+st.subheader("Quizz time!")
 
-st.subheader("Quick quizz")
+stb.single_choice("At what angle is obtained the maximal distance?",
+                options=["15", "30", "45", "60", "75"], answer_index=2)
 
-from streamlit_book.render_true_false import true_or_false
-question = "Have you like it so far?"
-true_or_false(question="Have you like it so far?", answer=True, 
-              success="I'm glad", error="I'm sorry")
-
-show_code = st.checkbox("Show code")
-if show_code:
-    st.code("""from streamlit_book.render_true_false import true_or_false
-true_or_false(question="Have you like it so far?", answer=True, 
-              success="I'm glad", error="I'm sorry")
-    """
-    )
+stb.true_or_false("On the moon, the horizontal distance is always larger than on the earth",
+                    answer=True)                
