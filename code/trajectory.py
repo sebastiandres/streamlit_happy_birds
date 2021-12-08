@@ -41,7 +41,7 @@ def get_trajectory(v0, theta, g=9.81, gravity_label="", x0=0, y0=0):
     trajectory_dict = {"x": x, "y": y, "legend": legend, "color": color}
     return trajectory_dict
 
-def fig_from_list(trajectory_list):
+def fig_from_list(trajectory_list, pig_position=[]):
     """
     Plots the trajectory of a projectile, given the initial velocity (v0),
     launch angle (theta), and time (t).
@@ -49,8 +49,7 @@ def fig_from_list(trajectory_list):
     fig = plt.figure()
     ax = plt.subplot(111)
     legend = []
-    xmax = []
-    ymax = []
+    xmax_list = []
     # Linestyles
     linestyles = ['-', '--', '-.', ':']
     # Iterate and plot
@@ -59,18 +58,25 @@ def fig_from_list(trajectory_list):
                     color = trajectory["color"], 
                     linestyle=linestyles[i%len(linestyles)])
         legend.append(trajectory["legend"])
-        xmax.append(np.max(trajectory["x"]))
-        ymax.append(np.max(trajectory["y"]))
-    #plt.legend(legend)
+        xmax_list.append(np.max(trajectory["x"]))
     plt.xlabel('x - horizonal distance in meters')
     plt.ylabel('y - vertical distance in meters')
     plt.suptitle('Trajectory of a projectile')
-    if len(xmax) > 1:
-        plt.xlim(-max(xmax)*0.05, max(xmax)*1.05)
-    if len(ymax) > 1:
-        plt.ylim(0, max(ymax)*1.05)
+
+    # Adding the pig
+    if len(pig_position) > 0:
+        ax.plot(pig_position[0], pig_position[1], marker='$\U0001F437$', ms=20)
+        xmax_list.append(pig_position[0])
+
+    # xmax_list and ymax calculations
+    if len(xmax_list) > 1:
+        xmax = max(xmax_list)
+        plt.xlim(-xmax*0.05, xmax*1.05)
+        plt.ylim(-xmax*0.05, xmax*1.05) # Same limits for x and y
 
     # Resizing for the legend     
+    #plt.legend(legend)
+    """
     box = ax.get_position()
     ax.set_position([box.x0, box.y0 + box.height * 0.1,
                     box.width, box.height * 0.9])
@@ -78,4 +84,20 @@ def fig_from_list(trajectory_list):
     ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.05),
                 fancybox=True, shadow=True, ncol=5)
 
+    """
     return fig
+
+def check_solution(pig_position, trajectory_list):
+    """
+    Checks if the pig is in the trajectory of the projectile.
+    """
+    x_tol, y_tol = 1.0, 1.0
+    print("pig_position:", pig_position)
+    # Iterate and check
+    for trajectory in trajectory_list:
+        x = trajectory["x"][-1]
+        y = trajectory["y"][-1]
+        print(f"x={x}, y={y}")
+        if abs(pig_position[0] - x) < x_tol and abs(pig_position[1] - y) < y_tol:
+            return True
+    return False
