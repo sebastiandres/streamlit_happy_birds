@@ -4,7 +4,7 @@
 
 Considering no air resistance, what is the trajectory followed by a projectile thrown with initial velocity $v_0$ at an angle $\theta$?
 
-![](https://github.com/sebastiandres/streamlit_happy_birds/blob/main/images/definition.png?raw=true)
+<img src="https://github.com/sebastiandres/streamlit_happy_birds/blob/main/images/definition.png?raw=true" alt="Parameter Definition" width="700">
 
 
 ## The short answer
