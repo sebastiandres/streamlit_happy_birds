@@ -87,6 +87,8 @@ def fig_from_list(trajectory_list, pig_position=[]):
         xmax_list.append(pig_position[0])
         for trajectory in trajectory_list:
             plot_emoji("images/bird.png", ax, trajectory["x"][-1], trajectory["y"][-1])
+        # legend, only if any trajectory
+        plt.legend(legend, fontsize=20, loc='upper center')
 
     # xmax_list and ymax calculations
     if len(xmax_list) > 0:
@@ -94,8 +96,6 @@ def fig_from_list(trajectory_list, pig_position=[]):
         plt.xlim(-xmax*0.05, xmax*1.05)
         plt.ylim(-xmax*0.05, xmax*1.05) # Same limits for x and y
 
-    # Resizing for the legend     
-    plt.legend(legend, fontsize=20, loc='upper center')
     return fig
 
 def check_solution(pig_position, trajectory_list):

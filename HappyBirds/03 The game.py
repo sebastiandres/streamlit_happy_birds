@@ -15,8 +15,8 @@ GRAVITY_DICT = {'Earth': 9.8, 'Moon': 1.6, 'Mars': 3.7, 'Jupiter': 24.8}
 if restart or "remaining_guesses" not in st.session_state:
     st.session_state["remaining_guesses"] = 3
 
-if restart or"trayectory_list" not in st.session_state:
-    st.session_state["trayectory_list"] = []
+if restart or"guess_list" not in st.session_state:
+    st.session_state["guess_list"] = []
 
 if restart or"game_gravity_index" not in st.session_state:
     st.session_state["game_gravity_index"] = np.random.randint(0, len(GRAVITY_DICT))
@@ -62,17 +62,17 @@ if st.session_state["remaining_guesses"] > 0:
     if c4.button("Shoot!"):
         st.session_state["remaining_guesses"] -= 1
         traj_dict = get_trajectory(v0, theta_deg, game_gravity, game_planet)
-        st.session_state["trayectory_list"].append(traj_dict)
+        st.session_state["guess_list"].append(traj_dict)
 
 # Placeholder for information
 placeholder = st.empty()
 
 # Always plot, to show the target
-fig = fig_from_list(st.session_state["trayectory_list"], st.session_state.solution["pig_position"])
+fig = fig_from_list(st.session_state["guess_list"], st.session_state.solution["pig_position"])
 st.pyplot(fig)
 
 # We check if we hit the pig after the shoot we have guesses left
-if check_solution(st.session_state.solution["pig_position"], st.session_state["trayectory_list"]):
+if check_solution(st.session_state.solution["pig_position"], st.session_state["guess_list"]):
     placeholder.success("You hit the pig... I mean, the target!")
 elif st.session_state["remaining_guesses"] == 0:
     line1 = "You're out of guesses! :("
