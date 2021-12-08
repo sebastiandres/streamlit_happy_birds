@@ -32,8 +32,7 @@ gravity = gravity_dict[gravity_label]
 # Compute the plot
 c1, c2 = st.columns([.5, .1])
 if c1.button("Add plot"):
-    theta_rad = theta_deg * np.pi / 180
-    traj_dict = get_trajectory(v0, theta_rad, gravity, gravity_label)
+    traj_dict = get_trajectory(v0, theta_deg, gravity, gravity_label)
     st.session_state["trayectory_list"].append(traj_dict)
 
 if c2.button("Clear plots"):
