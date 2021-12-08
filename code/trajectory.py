@@ -1,4 +1,5 @@
 from matplotlib import pyplot as plt
+from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 import numpy as np
 
 def motion(v0, theta, t, g=9.81, x0=0, y0=0):
@@ -25,7 +26,7 @@ def get_time(v0, theta, g=9.81, x0=0, y0=0):
 def get_trajectory(v0, theta_deg, g=9.81, gravity_label="", x0=0, y0=0):
     """
     Computes the trajectory of a projectile, given the initial velocity (v0),
-    launch angle (theta). It creates a vector with times, and from that a
+    launch angle (theta, in degrees). It creates a vector with times, and from that a
     trajectory.
     """
     # Convert theta
@@ -43,10 +44,26 @@ def get_trajectory(v0, theta_deg, g=9.81, gravity_label="", x0=0, y0=0):
     trajectory_dict = {"x": x, "y": y, "legend": legend, "color": color, "v0": v0, "theta_deg": theta_deg}
     return trajectory_dict
 
+def plot_emoji(emoji_path, ax, x, y, zoom=0.35):
+    """
+    Plots an emoji on a figure.
+    Based on:
+    https://www.geeksforgeeks.org/emojis-as-markers-in-matplotlib/ 
+    """
+    # reading the image
+    image = plt.imread(emoji_path)
+    # OffsetBox
+    image_box = OffsetImage(image, zoom=zoom)
+    # Drawing the image
+    ab = AnnotationBbox(image_box, (x, y), frameon=False)
+    ax.add_artist(ab)
+    return
+
+
 def fig_from_list(trajectory_list, pig_position=[]):
     """
-    Plots the trajectory of a projectile, given the initial velocity (v0),
-    launch angle (theta), and time (t).
+    Plots the trajectory of a projectile, given computed trajectories.
+    It optionally plots the pig position.
     """
     fig = plt.figure(figsize=(16,12))
     ax = plt.subplot(111)
@@ -61,13 +78,15 @@ def fig_from_list(trajectory_list, pig_position=[]):
                     linestyle=linestyles[i%len(linestyles)])
         legend.append(trajectory["legend"])
         xmax_list.append(np.max(trajectory["x"]))
-    plt.xlabel('x - horizonal distance in meters')
-    plt.ylabel('y - vertical distance in meters')
+    plt.xlabel('x - horizonal distance in meters', fontsize=20)
+    plt.ylabel('y - vertical distance in meters', fontsize=20)
 
-    # Adding the pig
-    if len(pig_position) > 0:
-        ax.plot(pig_position[0], pig_position[1], marker='s', ms=20, color="black")
+    # Adding the pig and birds, if needed
+    if len(pig_position) > 0:        
+        plot_emoji("images/pig.png", ax, pig_position[0], pig_position[1])
         xmax_list.append(pig_position[0])
+        for trajectory in trajectory_list:
+            plot_emoji("images/bird.png", ax, trajectory["x"][-1], trajectory["y"][-1])
 
     # xmax_list and ymax calculations
     if len(xmax_list) > 0:
@@ -76,16 +95,7 @@ def fig_from_list(trajectory_list, pig_position=[]):
         plt.ylim(-xmax*0.05, xmax*1.05) # Same limits for x and y
 
     # Resizing for the legend     
-    plt.legend(legend)
-    """
-    box = ax.get_position()
-    ax.set_position([box.x0, box.y0 + box.height * 0.1,
-                    box.width, box.height * 0.9])
-    # Put a legend below current axis
-    ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.05),
-                fancybox=True, shadow=True, ncol=5)
-
-    """
+    plt.legend(legend, fontsize=20, loc='upper center')
     return fig
 
 def check_solution(pig_position, trajectory_list):
