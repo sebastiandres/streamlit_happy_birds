@@ -1,9 +1,10 @@
 # Happy Birds
 
-This is web app illustrates the use of streamlit_book.
-It requires the libraries streamlit, numpy and streamlit_book.
+This is web app illustrates the use of [streamlit_book](https://streamlit-book.readthedocs.io/en/latest/).
 
-std.to_do
+It makes use of the libraries streamlit, streamlit_book, numpy and matplotlib.
+
+stb.to-do
 On this site, you will:
 - [ ] Learn about motion trajectories
 - [ ] Shoot objects on the moon, earth, mars and jupiter
