@@ -37,7 +37,8 @@ if restart or "solution" not in st.session_state:
                                     "theta_deg_sol": theta_deg_sol,
                                     }
 
-c1.subheader(f"Can you hit the target on planet {game_planet}?")
+article_dict = {'Earth': "", 'Moon': "the", 'Mars': "", 'Jupiter': ""}
+c1.subheader(f"Can you hit the target on {article_dict[game_planet]} {game_planet}?")
 
 # Pig position
 x_text = f"x = {st.session_state.solution['pig_position'][0]:.3f} meters"

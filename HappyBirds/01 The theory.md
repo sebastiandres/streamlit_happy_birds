@@ -9,14 +9,14 @@ Considering no air resistance, what is the trajectory followed by a projectile t
 
 ## The short answer
 
-The trajectory followed by a projectile thrown with initial velocity $v_0$ at an angle $\theta$, without air resistance, is
+The trajectory followed by a projectile thrown with initial velocity $v_0$ at an angle $\theta$, without air resistance, is:
 
 $$
 x(t) = v_0 \cos(\theta)t \\\\
 y(t) = v_0 \sin(\theta)t - \frac{1}{2} g t^{2}
 $$
 
-where $g$ is the acceleration due to gravity.
+where $x$ and $y$ are the horizontal and vertical directions, and $g$ is the acceleration due to gravity.
 
 ## The long answer
 
@@ -49,7 +49,7 @@ $$
 
 Following the equation above, answer the following question:
 
-stb.single-choice
+stb.single_choice
 What is the trajectory of a projectile without considering air resistance?
 - A straight line
 + A parabola
