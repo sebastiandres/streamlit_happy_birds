@@ -48,5 +48,5 @@ st.subheader("Quizz time!")
 stb.single_choice("At what angle is obtained the maximal distance?",
                 options=["15", "30", "45", "60", "75"], answer_index=2)
 
-stb.true_or_false("On the moon, the horizontal distance is always larger than on the earth",
+stb.true_or_false("On the moon, the horizontal distance is always larger than on the earth under the same initial velocity and angle.",
                     answer=True)                

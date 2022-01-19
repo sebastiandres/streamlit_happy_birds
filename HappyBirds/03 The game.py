@@ -88,5 +88,4 @@ else:
         placeholder.warning(text)
     if st.session_state['remaining_guesses']==1:
         text = f"Use carefully the last guess!"
-        placeholder.warning(text)
-            
+        placeholder.warning(text)            
